@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" type="image/png" href="http://cdn.onlinewebfonts.com/svg/img_503358.png" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://bootswatch.com/4/lux/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP"
+        crossorigin="anonymous">
+
+
+</head>
+<style>
+    section {
+        padding: 30px 0;
+    }
+    #footer {
+        background: #000000 !important;
+    }
+    
+    
+    </style>
+
+<body>
+    <div id="app">
+        <title>Movies | {{data.title}}</title>
+
+        <!-- ======================================= Navbar ====================================== -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <a class="navbar-brand" href="index.html">Movies</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01"
+                aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarColor01">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="index.html">Popular </a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="upcoming.html">UPCOMING</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="trending.html">Trending</a>
+                    </li>
+                </ul>
+                <form class="form-inline my-2 my-lg-0">
+                    <input class="form-control mr-sm-2" type="text" placeholder="Search" v-model='search'>
+                    <a href="searchMovies.html" class="btn btn-secondary my-2 my-sm-0" type="submit" @click="searchMovie">Search</a>
+                </form>
+            </div>
+        </nav>
+
+        <!-- ============================================================================================== -->
+
+        <div class="container mt-5">
+            <div class="card">
+                <div v-if="loading" style="height:700px;">
+                    <h1 class="text-center mt-5">Loading...</h1>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <img v-bind:src="'http://image.tmdb.org/t/p/w342/'+data.poster_path" alt="">
+                    </div>
+                    <div class="col-md-7 mt-2">
+                        <h3 id="title">{{data.title}}</h3>
+                        <p>{{data.tagline}}</p>
+                        <p class="mt-5 h5">{{data.overview}}</p>
+                        <br>
+
+                        <span v-if="data.vote_average >= 5"> Rating : {{data.vote_average}} <i class="fas fa-thumbs-up"></i></span>
+                        <span v-else> Rating : {{data.vote_average}} <i class="fas fa-thumbs-down"></i></span> <br>
+                        popularity : {{data.popularity}} <br>
+                        runtime : {{data.runtime}} Minute<br>
+                        language :<span v-for="language in language" if="language > 1" class="btn-primary ml-1 ">
+                            {{language.name}}</span> <br>
+                        genres: <span v-for="genres in genres" class="btn-primary ml-1">
+                            {{genres.name}}
+                        </span><br>
+                        Status: {{data.status}}
+
+
+
+
+                    </div>
+                </div>
+            </div>
+            <br>
+
+            <h1 class="text-center mt-4">Videos</h1>
+            <hr>
+            <div class="row">
+                <div class="col-md-6" v-for='videos in videos'>
+                    <iframe width="560" height="315" v-bind:src="'https://www.youtube.com/embed/'+videos.key "
+                        frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen></iframe>
+                </div>
+
+            </div>
+            <!-- <div v-else>
+                <br>
+                <h5 class="text-center">no videos</h5>
+                <br>
+            </div> -->
+            <hr>
+            <h1 class="text-center mt-5">Cast</h1>
+            <div class="row">
+                <div class="col-md-3" v-for="cast in cast">
+
+                    <div class="row">
+                        <div class="col-md-2  mt-2">
+                            <img v-if='cast.profile_path == null' src="https://m.media-amazon.com/images/G/01/imdb/images/nopicture/medium/name-2135195744._CB470041852_.png"
+                                alt="" width="40px;">
+                            <img v-else v-bind:src="'http://image.tmdb.org/t/p/w342/'+cast.profile_path" alt="" width="40px;">
+                        </div>
+                        <div class="col-md-10  mt-2">
+                            <p class="ml-3 h5">{{cast.name}}</p>
+                            <p class="ml-3" style="margin-top:-6%;">{{cast.character}}</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <hr>
+        </div>
+        <section id="footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 mt-2 mt-sm-2 text-center text-white">
+                        <p><u><a href="https://www.nationaltransaction.com/" style="color:white">We use IMDB API</a></u>
+                            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Rem dignissimos, corporis
+                            repellat </p>
+                        <p class="h6 text-white">&copy<a class="text-white ml-2" href="hajidalakhtar.github.io" target="_blank">Hajidalakhtar</a></p>
+                    </div>
+                    </hr>
+                </div>
+            </div>
+        </section>
+    </div>
+
+</body>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+<script>
+
+
+    new Vue({
+        el: "#app",
+        data() {
+            return {
+                data: null,
+                videos: null,
+                cast: null,
+                genres: null,
+                language: null,
+                search: null,
+                loading: true
+
+
+            }
+
+        },
+        mounted() {
+            console.log(localStorage.id);
+
+            axios
+                .get('https://api.themoviedb.org/3/movie/' + localStorage.id + '?api_key=be4808a7b6d2d8684012bc817583647d&language=en-US')
+                .then(response => (this.data = response.data, this.genres = response.data.genres, this.language = response.data.spoken_languages))
+                .finally(() => this.loading = false)
+
+
+            axios
+                .get('https://api.themoviedb.org/3/movie/' + localStorage.id + '/videos?api_key=be4808a7b6d2d8684012bc817583647d&language=en-US')
+                .then(response => (this.videos = response.data.results))
+                .finally(() => this.loading = false)
+
+            axios
+                .get('https://api.themoviedb.org/3/movie/' + localStorage.id + '/credits?api_key=be4808a7b6d2d8684012bc817583647d')
+                .then(response => (this.cast = response.data.cast))
+                .finally(() => this.loading = false)
+
+
+
+        },
+        methods: {
+            searchMovie() {
+                localStorage.search = this.search
+                // console.log(localStorage.search);
+            }
+        }
+    })
+
+
+</script>
+
+</html>

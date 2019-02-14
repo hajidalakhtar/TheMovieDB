@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="shortcut icon" type="image/png" href="http://cdn.onlinewebfonts.com/svg/img_503358.png" />
+    <link rel="stylesheet" href="https://bootswatch.com/4/lux/bootstrap.min.css">
+
+    <title>Movies | Popular</title>
+
+</head>
+<style>
+    #imgHover{
+        background-color: rgba(0, 0, 0, 0.548);
+        opacity: 0;
+    
+        }
+    section {
+        padding: 30px 0;
+    }
+    #footer {
+        background: #000000 !important;
+    }
+    
+    
+
+
+
+</style>
+
+<body>
+    <div id="app">
+        <!-- ======================================= Navbar ====================================== -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <a class="navbar-brand" href="index.html">Movies</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01"
+                aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarColor01">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item ">
+                        <a class="nav-link" href="index.html">Popular </a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link " href="upcoming.html">UPCOMING</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="trending.html">Trending</a>
+                    </li>
+                </ul>
+                <form class="form-inline my-2 my-lg-0">
+                    <input class="form-control mr-sm-2" type="text" placeholder="Search" v-model='search'>
+                    <a href="searchMovies.html" class="btn btn-secondary my-2 my-sm-0" type="submit" @click="searchMovie">Search</a>
+                </form>
+            </div>
+        </nav>
+
+        <!-- ============================================================================================== -->
+
+        <div class="container">
+            <h5 class="mt-4" style="margin-bottom: -2%">Category : {{category}}</h5>
+            <div v-if="loading" style="height:700px;">
+                <h1 class="text-center mt-5">Loading...</h1>
+            </div>
+            <div class="row" v-else>
+                <div v-for="data in data" v-if="data.poster_path == null"></div>
+
+                <div class="col-md-3" v-else>
+                    <a href="detailsMovies.html" @click="MoviesId(data.id)">
+                        <div class=" mt-5" style="box-shadow: 10px 10px 50px black ;">
+                            <div style="background-image: linear-gradient(rgba(0, 0, 0, 0), black); width: 90% ;  margin-top:100%; position:absolute; height: 100px"
+                                class="text-center">
+                                <h5 style="overflow: hidden;
+                                            white-space: nowrap;
+                                            text-overflow: ellipsis;
+                                            max-width: 100%;color: white; padding-top: 27%; "
+                                    class="ml-1 mr-1">{{data.title}}</h5>
+                            </div>
+                            <img v-bind:src="'http://image.tmdb.org/t/p/w500/'+data.poster_path" alt="" class="mx-auto d-block"
+                                style="width:100%; height: 100%;">
+                        </div>
+                    </a>
+                </div>
+
+            </div>
+
+
+            <a href="page.html" @click="nextPage" class="btn btn-primary mt-4 mb-5" style="margin-left: 88%">Next Page</a>
+        </div>
+        <section id="footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 mt-2 mt-sm-2 text-center text-white">
+                        <p><u><a href="https://www.nationaltransaction.com/" style="color:white">We use IMDB API</a></u>
+                            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Rem dignissimos, corporis
+                            repellat </p>
+                        <p class="h6 text-white">&copy<a class="text-white ml-2" href="hajidalakhtar.github.io" target="_blank">Hajidalakhtar</a></p>
+                    </div>
+                    </hr>
+                </div>
+            </div>
+        </section>
+    </div>
+
+</body>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+<script>
+
+
+    new Vue({
+        el: "#app",
+        data() {
+            return {
+                data: null,
+                search: null,
+                page: 1,
+                category: 'upcoming',
+                loading: true
+
+            }
+
+        },
+        mounted() {
+            localStorage.category = this.category;
+            axios
+                .get('https://api.themoviedb.org/3/movie/' + localStorage.category + '?api_key=be4808a7b6d2d8684012bc817583647d&language=en-US&page=' + this.page)
+                .then(response => (this.data = response.data.results))
+                .finally(() => this.loading = false)
+
+
+        },
+        methods: {
+            MoviesId(id) {
+                localStorage.id = id
+            },
+            searchMovie() {
+                localStorage.search = this.search
+                // console.log(localStorage.search);
+            },
+            nextPage() {
+                const page = this.page + 1;
+                this.page = page
+                localStorage.page = this.page
+
+
+            },
+
+
+        }
+
+
+    })
+
+
+
+
+</script>
+
+</html>
